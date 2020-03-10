@@ -1,0 +1,12 @@
+.btn
+{
+    color: #d9edf7;
+}
+
+.has-error{
+    color: red;
+}
+
+.rate label,input{
+    cursor: pointer;
+}
