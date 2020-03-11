@@ -23,6 +23,7 @@ class BusinessController extends Controller
 
     public function create()
     {
+//        User::with('address')->find(1);
         return view('business.create');
 
     }
@@ -31,9 +32,16 @@ class BusinessController extends Controller
     public function my_businesses()
     {
         $businesses = Business::all()->where('user_id', Auth::user()->id);
-        $rate = DB::table('reviews')->where('user_id', Auth::user()->id )->avg('rate');
 
-        return view('business.my_businesses', ['businesses'=>$businesses, 'rate'=>$rate]);
+        foreach ($businesses as $business){
+            $total_rates = 0;
+            foreach ($business->reviews as $review){
+                $total_rates += $review->rate;
+            }
+            $business->total_rate = $total_rates;
+        }
+
+        return view('business.my_businesses', compact('businesses', 'rates'));
     }
 
 
@@ -73,7 +81,7 @@ class BusinessController extends Controller
 
         Business::where('id', $id )->update(['name' => $request->name, 'address' => $request->address]);
 
-        return redirect('business/all')->with('success', 'Updated successfully');
+        return redirect('business/my_businesses')->with('success', 'Updated successfully');
     }
 
     public function delete($id){
@@ -85,18 +93,20 @@ class BusinessController extends Controller
             abort(404);
         }
 
-        return redirect('business/all')->with('success', 'Business deleted');
+        return redirect('business/my_businesses')->with('success', 'Business deleted');
     }
 
     public function all()
     {
         $businesses = Business::with('reviews.user')->get();
 
-//        $rates = Business::with('reviews.business')->get();
-//        foreach ($rates as $rate)
-//        {
-//            echo $rate->rate;
-//        }
+        foreach ($businesses as $business){
+            $total_rates = 0;
+            foreach ($business->reviews as $review){
+                $total_rates += $review->rate;
+            }
+            $business->total_rate = $total_rates;
+        }
 
         return view('business.all', compact('businesses', 'rates'));
 

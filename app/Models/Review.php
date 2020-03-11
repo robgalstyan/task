@@ -19,4 +19,8 @@ class Review extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function business(){
+        return $this->belongsTo(Business::class);
+    }
+
 }

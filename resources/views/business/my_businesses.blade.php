@@ -8,17 +8,21 @@
                 {{ session('success') }}
             </div>
         @endif
-            <h3 style="text-align: center">The average rating of all businesses: <strong>{{ $rate}}</strong></h3>
         @foreach($businesses as $business)
             <div class="row">
                 <div class="col-sm-offset-1 businesses">
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                        Add Review
-                    </button>
-                    </a>
+{{--                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">--}}
+{{--                        Add Review--}}
+{{--                    </button>--}}
+
 
                     <h3>Name: <strong>{{ $business->name }}</strong></h3>
                     <p>Adress: <strong>{{ $business->address }}</strong></p>
+                    @if($business->reviews->count() == 0)
+                        <p>Total rate <strong> {{ ceil($business->total_rate/(1+$business->reviews->count())) }}</strong></p>
+                    @else
+                        <p>Total rate <strong>{{ ceil($business->total_rate/$business->reviews->count()) }}</strong></p>
+                    @endif
                     <a href="{{ url('business/edit/'.$business->id) }}">
                         <button class="btn btn-info">Edit</button>
                     </a>
