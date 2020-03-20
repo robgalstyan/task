@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Psy\VersionUpdater\Checker;
 
+use App\Http\Controllers\Validator;
+
 
 class BusinessController extends Controller
 {
@@ -41,16 +43,18 @@ class BusinessController extends Controller
             $business->total_rate = $total_rates;
         }
 
-        return view('business.my_businesses', compact('businesses', 'rates'));
+            return view('business.my_businesses', compact('businesses', 'rates'));
+
     }
 
 
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'address' => 'required'
+            'name' => 'required|max:255',
+            'address' => 'required|max:255'
         ]);
+
 
         // add business
         Business::create([
@@ -75,8 +79,8 @@ class BusinessController extends Controller
 
     public function update(Request $request, $id){
         $this->validate($request, [
-            'name' => 'required',
-            'address' => 'required'
+            'name' => 'required|max:255',
+            'address' => 'required|max:255'
         ]);
 
         Business::where('id', $id )->update(['name' => $request->name, 'address' => $request->address]);
@@ -109,6 +113,7 @@ class BusinessController extends Controller
         }
 
         return view('business.all', compact('businesses', 'rates'));
+
 
     }
 

@@ -6,10 +6,21 @@
         <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
             Add Review
         </button>
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#menu1">Open</a></li>
-            <li><a data-toggle="tab" href="#menu2">Closed</a></li>
-        </ul>
+        <?php
+            $number = 0;
+
+            foreach($reviews as $review)
+                {
+                    if($review->rate >= 4)
+                        $number = 1;
+                }
+        ?>
+        @if($number == 0)
+            <ul class="nav nav-tabs" id="nav-tabb">
+                <li class="active"><a data-toggle="tab" href="#menu1">Open</a></li>
+                <li><a data-toggle="tab" href="#menu2">Closed</a></li>
+            </ul>
+        @endif
     </div>
 
     <div class="tab-content">
@@ -23,8 +34,8 @@
                         @if(auth()->user()->id == $review->user_id && $review->rate < 4)
                             @if($review->status == 1)
                                 <a href="{{ url('review/toggle_status/'.$review->id) }}">Close</a>
-{{--                            @else--}}
-{{--                                <a href="{{ url('review/toggle_status/'.$review->id) }}">Open</a>--}}
+                            @else
+                                <a href="{{ url('review/toggle_status/'.$review->id) }}">Open</a>
                             @endif
                         @endif
                         <p>Rate:
