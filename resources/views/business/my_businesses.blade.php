@@ -3,6 +3,7 @@
 
 @section('content')
     <div class="container">
+        <h1 href="#"><a href="{{ url('business/dashboard') }}" style="font-weight: bold">Dashboard</a></h1>
         @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -36,7 +37,6 @@
                         </a>
                     </div>
                  </div>
-{{--                @endisset--}}
             @endforeach
     </div>
 

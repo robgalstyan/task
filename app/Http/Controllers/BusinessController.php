@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Psy\VersionUpdater\Checker;
 
-use App\Http\Controllers\Validator;
 
 
 class BusinessController extends Controller
@@ -43,9 +42,29 @@ class BusinessController extends Controller
             $business->total_rate = $total_rates;
         }
 
-            return view('business.my_businesses', compact('businesses', 'rates'));
+            return view('business.my_businesses', compact('businesses', 'total_rate'));
+
 
     }
+
+
+
+    public function dashboard()
+    {
+        $businesses = Business::all()->where('user_id', Auth::user()->id);
+
+        foreach ($businesses as $business){
+            $every_rates = 0;
+            foreach ($business->reviews as $review){
+                $every_rates += $review->rate;
+            }
+            $business->every_rate = $every_rates;
+        }
+
+
+        return view('business.dashboard', compact('businesses', 'every_rate'));
+    }
+
 
 
     public function store(Request $request)
@@ -112,7 +131,7 @@ class BusinessController extends Controller
             $business->total_rate = $total_rates;
         }
 
-        return view('business.all', compact('businesses', 'rates'));
+        return view('business.all', compact('businesses'));
 
 
     }
